@@ -13,6 +13,7 @@ def Q1(L1 = 1, L2 = 1, x= 0.5, y = 0.5):
     B = m.acos((x**2 + y**2 - L1**2 - L2**2) / (2 * L1 * L2))
     A = m.atan2(y, x) - m.atan2(L2 * m.sin(B), L1 + L2* m.cos(B))
     print(A,B)
+
     print(f"Fkine =\n{Rob.fkine(q =[A,B])}")
     Rob.teach(q = [A,B])
 
@@ -26,13 +27,17 @@ def Q1(L1 = 1, L2 = 1, x= 0.5, y = 0.5):
     print(Rob.fkine(q =[1.9948,-24188]).printline())
    
     print("Letra B")
-    Rob = Rob* ET2.tx(qlim=[0,1])
+    L1 = 2
+    L2 = 1.5
+    Rob = ET2.R() * ET2.tx(L1) * ET2.R() * ET2.tx(L2)* ET2.tx(qlim=[0,2])
     Rob.teach(q = [A,B,1])
+    Rob.teach(q = [0,B,2])
 
 
-    print("Letra C")
-    print(Rob.fkine(q = [0,0.5,0.5]).printline())
-    Rob.teach(q = [0,0.5,0.5])
+    q = [0,0.5,0.5]
+    print(f"Fkine =\n{Rob.fkine(q)}")
+    print(Rob.fkine(q).printline())
+    Rob.teach(q)
 
 def Q2(L1 = 1, L2 = 1, L3 = 1, L4 = 1):
     fig = plt.figure()
