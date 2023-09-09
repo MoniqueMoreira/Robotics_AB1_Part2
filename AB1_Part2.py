@@ -46,12 +46,12 @@ def Q2(L1 = 1, L2 = 1, L3 = 1, L4 = 1):
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
 
-    ax.set_xlim([-1, 2])
+    ax.set_xlim([-1, 3])
     ax.set_ylim([-1, 2])
     ax.set_zlim([0, 2])
 
     O = transl(0, 0, 0)
-    J1 = transl(0, 0, L1+L2) @ trotx(0)
+    J1 = transl(0, 0,0) @ trotx(0)
     J2 = transl(0, 0, L1+ L2) @ trotx(PI/2)
     J3 = transl(L3,0, L1+ L2) @ trotx(PI/2)
     A = transl(L3 +L4,0, L1+ L2) @ trotx(PI/2)
