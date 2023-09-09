@@ -1,4 +1,4 @@
-import math 
+import math as m
 import numpy as np
 from roboticstoolbox import ET2, ET, ERobot, DHRobot, RevoluteDH, PrismaticDH, models
 import matplotlib.pyplot as plt
@@ -70,7 +70,7 @@ def Q2(L1 = 1, L2 = 1, L3 = 1, L4 = 1):
     print(T)
     rob.teach(q = [0,0,0])
 
-def Q3(L0,L1,L2,D1,D3,D4):
+def Q3(q = [0,0,0.5,0],L0 = 1,L1=1,L2=1,D1=0.2,D3=1,D4=0.2):
     '''fig = plt.figure()
     ax = fig.add_subplot(111,projection='3d')
     ax.set_xlabel('X')
@@ -103,8 +103,43 @@ def Q3(L0,L1,L2,D1,D3,D4):
     e4=  RevoluteDH(d = D4)
     rob = DHRobot([e1,e2,e3,e4], name = 'RRPR')
     print(rob)
-
-    T = rob.fkine(q=[0,0,0.5,0])
-    print(T)
-    rob.teach(q = [0,0,0.5,0])
-
+    print(rob.fkine(q))
+    #print(rob.fkine_all(q))
+    rob.teach(q)
+    '''
+    | q1  │  D1 │ L1 │   0.0° │ -180.0° │ 180.0° │
+    │ q2  │   0 │ L2 │ 180.0° │ -180.0° │ 180.0° │
+    │0.0° │  q3 │  0 │   0.0° │     0.0 │    1.0 │
+    │ q4  │  D4 │  0 │   0.0° │ -180.0° │ 180.0° '''
+    #0T4 =(0T4)^-1 = 0T1*1T2 *2T3 *3T4
+    T01 = np.matrix(
+        [[m.cos(q[0]),-m.sin(q[0])*m.cos(0),m.sin(q[0])*m.sin(0),L1*m.cos(q[0])],
+         [m.sin(q[0]),m.cos(q[0])*m.cos(0),-m.cos(q[0])*m.sin(0),L1*m.sin(q[0])],
+         [0,m.sin(0),m.cos(0),D1],
+         [0,0,0,1]])
+    T12 = np.matrix(
+        [[m.cos(q[1]),-m.sin(q[1])*m.cos(PI),m.sin(q[1])*m.sin(PI),L2*m.cos(q[1])],
+         [m.sin(q[1]),m.cos(q[1])*m.cos(PI),-m.cos(q[1])*m.sin(0),L2*m.sin(q[1])],
+         [0,m.sin(PI),m.cos(PI),0],
+         [0,0,0,1]])
+    T23 = np.matrix(
+        [[m.cos(0),-m.sin(0)*m.cos(0),m.sin(0)*m.sin(0),0],
+         [m.sin(0),m.cos(0)*m.cos(0),-m.cos(0)*m.sin(0),0],
+         [0,m.sin(0),m.cos(0),q[2]],
+         [0,0,0,1]])
+    T34 = np.matrix(
+        [[m.cos(q[3]),-m.sin(q[3])*m.cos(0),m.sin(q[3])*m.sin(0),0],
+         [m.sin(q[3]),m.cos(q[3])*m.cos(0),-m.cos(q[3])*m.sin(0),0],
+         [0,m.sin(0),m.cos(0),D4],
+         [0,0,0,1]])
+    
+    '''print(T01)
+    print(T12)
+    print(T23)
+    print(T34)'''
+    T= (np.dot(T01,T12))
+    #print(T)
+    T = np.dot(T,T23)
+    #print(T)
+    T04 = np.around(np.dot(T,T34),2)
+    print(T04)
