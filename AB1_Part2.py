@@ -40,6 +40,8 @@ def Q1(L1 = 1, L2 = 1, x= 0.5, y = 0.5):
     Rob.teach(q)
 
 def Q2(L1 = 1, L2 = 1, L3 = 1, L4 = 1):
+
+    print("Letra A")
     fig = plt.figure()
     ax = fig.add_subplot(111,projection='3d')
     ax.set_xlabel('X')
@@ -65,6 +67,7 @@ def Q2(L1 = 1, L2 = 1, L3 = 1, L4 = 1):
 
     plt.show()
 
+    print("Letra B")
     e2 = RevoluteDH(d = L1+L2,alpha = PI/2,name = '1')
     e3 = RevoluteDH(a = L3 )
     e4 = RevoluteDH(a = L4)
@@ -72,11 +75,14 @@ def Q2(L1 = 1, L2 = 1, L3 = 1, L4 = 1):
     rob = DHRobot([e2,e3,e4], name = 'RRR')
     print(rob)
 
+    print("Letra C")
     T = rob.fkine_all(q=[0,0,0])
     print(T)
     rob.teach(q = [0,0,0])
+    rob.teach(q = [0,-PI/4,PI/2])
 
 def Q3(q = [0,0,0.5,0],L0 = 1,L1=1,L2=1,D1=0.2,D3=1,D4=0.2):
+    
     fig = plt.figure()
     ax = fig.add_subplot(111,projection='3d')
     ax.set_xlabel('X')
@@ -103,6 +109,10 @@ def Q3(q = [0,0,0.5,0],L0 = 1,L1=1,L2=1,D1=0.2,D3=1,D4=0.2):
 
     plt.show()
 
+    print("Parte 1: Implementação da função")
+    pose(q)
+
+    print("Fkine:")
     e1 = RevoluteDH(a = L1,d = D1)
     e2 = RevoluteDH(a = L2,alpha = PI)
     e3 = PrismaticDH(qlim = [0, D3])
@@ -112,6 +122,9 @@ def Q3(q = [0,0,0.5,0],L0 = 1,L1=1,L2=1,D1=0.2,D3=1,D4=0.2):
     print(rob.fkine(q))
     #print(rob.fkine_all(q))
     rob.teach(q)
+    
+
+def Pose(q = [0,0,0,0]):
     '''
     | q1  │  D1 │ L1 │   0.0° │ -180.0° │ 180.0° │
     │ q2  │   0 │ L2 │ 180.0° │ -180.0° │ 180.0° │
