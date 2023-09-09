@@ -242,7 +242,7 @@ DHRobot: RRR, 3 joints (RRR), dynamics, standard DH parameters
 │ q3 │  0 │  1 │  0.0° │
 └────┴────┴────┴───────┘
 ```
-Onde atravez da função fkine_all(), podemos ver a transformações da base até a junta:
+Onde atravez da função fkine_all(), podemos ver a transformações da base até a junta j:
 ```
 T = rob.fkine_all(q=[0,0,0])
 print(T)
@@ -275,9 +275,38 @@ Sendo $`T[0] = ^0T_0`$,
 
 $`T[1] = ^0T_1`$,
 
-$`T[2]= ^0T2 = ^0T_1 \oplus ^1T_2`$  
+$`T[2]= ^0T2 `$ 
+$`^0T2 = ^0T_1 \oplus ^1T_2`$
 
-e $`T[3]= ^0T3 = ^0T_1 \oplus ^1T_2 \oplus ^2T_3 `$
+$`^0T_2 = \begin{bmatrix}1&0&0&0\\
+0&0&-1&0\\
+0&1&0&2\\
+0&0&0&1\end{bmatrix} * \begin{bmatrix}1&0&0&1\\
+0&1&0&0\\
+0&0&1&0\\
+0&0&0&1\end{bmatrix} = \begin{bmatrix}1&0&0&1\\
+0&0&-1&0\\
+0&1&0&2\\
+0&0&0&1\end{bmatrix}`$
+
+e $`T[3]= ^0T3 `$ 
+$` ^0T3 = ^0T_1 \oplus ^1T_2 \oplus ^2T_3 `$
+
+$`^0T_3 = \begin{bmatrix}1&0&0&0\\
+0&0&-1&0\\
+0&1&0&2\\
+0&0&0&1\end{bmatrix} * \begin{bmatrix}1&0&0&1\\
+0&1&0&0\\
+0&0&1&0\\
+0&0&0&1\end{bmatrix} * \begin{bmatrix}1&0&0&1\\
+0&1&0&0\\
+0&0&1&0\\
+0&0&0&1\end{bmatrix} = \begin{bmatrix}1&0&0&2\\
+0&0&-1&0\\
+0&1&0&2\\
+0&0&0&1\end{bmatrix}`$
+
+Podendo ver que os resultando batem com o gerados pelo função fkine_all da RoboticsToolBox
 ```
 rob.teach(q = [0,0,0])
 rob.teach(q = [0,-PI/4,PI/2])
@@ -288,4 +317,5 @@ rob.teach(q = [0,-PI/4,PI/2])
   <a name="figura-10"></a>
   <img src="Q2C2.png" alt="Sistema de Referências" style="width: 45%;">
 </div>
+
 ## 3 Questão
