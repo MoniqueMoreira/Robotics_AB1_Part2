@@ -8,30 +8,31 @@ PLOT = True
 PI = np.pi
 
 def Q1(L1 = 1, L2 = 1, x= 0.5, y = 0.5):
-    robot_2 = ET2.R() * ET2.tx(L1) * ET2.R() * ET2.tx(L2)
-    B = math.acos((x**2 + y**2 - L1**2 - L2**2) / (2 * L1 * L2))
-    A = math.atan2(y, x) - math.atan2(L2 * math.sin(B), L1 + L2* math.cos(B))
+    
+    Rob = ET2.R() * ET2.tx(L1) * ET2.R() * ET2.tx(L2)
+    B = m.acos((x**2 + y**2 - L1**2 - L2**2) / (2 * L1 * L2))
+    A = m.atan2(y, x) - m.atan2(L2 * m.sin(B), L1 + L2* m.cos(B))
     print(A,B)
-    print(f"Fkine =\n{robot_2.fkine(q =[A,B])}")
-    robot_2.teach(q = [A,B])
+    print(f"Fkine =\n{Rob.fkine(q =[A,B])}")
+    Rob.teach(q = [A,B])
 
     print("Letra A")
-    print(f"Fkine =\n{robot_2.fkine(q =[-0.4240,2.4188])}")
-    robot_2.teach(q =[-0.4240,2.4188])
-    print(robot_2.fkine(q =[-0.4240,2.4188]).printline())
+    print(f"Fkine =\n{Rob.fkine(q =[-0.4240,2.4188])}")
+    Rob.teach(q =[-0.4240,2.4188])
+    print(Rob.fkine(q =[-0.4240,2.4188]).printline())
 
-    print(f"Fkine =\n{robot_2.fkine(q =[1.9948,-2.4188])}")
-    robot_2.teach(q =[1.9948,-2.4188])
-    print(robot_2.fkine(q =[1.9948,-24188]).printline())
+    print(f"Fkine =\n{Rob.fkine(q =[1.9948,-2.4188])}")
+    Rob.teach(q =[1.9948,-2.4188])
+    print(Rob.fkine(q =[1.9948,-24188]).printline())
    
     print("Letra B")
-    robot_2 = robot_2* ET2.tx(qlim=[0,1])
-    robot_2.teach(q = [A,B,1])
+    Rob = Rob* ET2.tx(qlim=[0,1])
+    Rob.teach(q = [A,B,1])
 
 
     print("Letra C")
-    print(robot_2.fkine(q = [0,0.5,0.5]).printline())
-    robot_2.teach(q = [0,0.5,0.5])
+    print(Rob.fkine(q = [0,0.5,0.5]).printline())
+    Rob.teach(q = [0,0.5,0.5])
 
 def Q2(L1 = 1, L2 = 1, L3 = 1, L4 = 1):
     fig = plt.figure()
@@ -71,7 +72,7 @@ def Q2(L1 = 1, L2 = 1, L3 = 1, L4 = 1):
     rob.teach(q = [0,0,0])
 
 def Q3(q = [0,0,0.5,0],L0 = 1,L1=1,L2=1,D1=0.2,D3=1,D4=0.2):
-    '''fig = plt.figure()
+    fig = plt.figure()
     ax = fig.add_subplot(111,projection='3d')
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
@@ -95,7 +96,7 @@ def Q3(q = [0,0,0.5,0],L0 = 1,L1=1,L2=1,D1=0.2,D3=1,D4=0.2):
     trplot(J4, frame="4", color="g")
     trplot(A, frame="A",color="k")
 
-    plt.show()'''
+    plt.show()
 
     e1 = RevoluteDH(a = L1,d = D1)
     e2 = RevoluteDH(a = L2,alpha = PI)
