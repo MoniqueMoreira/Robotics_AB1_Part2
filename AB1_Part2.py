@@ -1,6 +1,6 @@
 import math as m
 import numpy as np
-from roboticstoolbox import ET2, ET, ERobot, DHRobot, RevoluteDH, PrismaticDH, models
+from roboticstoolbox import ET2, DHRobot, RevoluteDH, PrismaticDH
 import matplotlib.pyplot as plt
 from spatialmath.base import *
 
