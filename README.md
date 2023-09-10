@@ -1,5 +1,15 @@
 # Robótica AB1_Parte 2: Cinemática Direta
 
+Importando as bibliotecas:
+
+```
+import math as m
+import numpy as np
+from roboticstoolbox import ET2, DHRobot, RevoluteDH, PrismaticDH
+import matplotlib.pyplot as plt
+from spatialmath.base import *
+```
+
 ## 1 Questão
 
 ### Modelagem do Manipulador RR Planar
