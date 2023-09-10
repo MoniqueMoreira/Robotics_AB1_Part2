@@ -327,4 +327,175 @@ rob.teach(q = [0,-PI/4,PI/2])
 </div>
 
 ## 3 Questão
+### Modelando o robô SCARA:
 
+<div style="display: flex;">
+  <a name="figura-11"></a>
+  <img src="SCARA.png" alt="SCARA" style="width: 45%;">
+  <a name="figura-12"></a>
+  <img src="Q31.png" alt="Sistema de Referências SCARA" style="width: 45%;">
+</div>
+
+Modedelando o robô SCARA da figura acima atravez da juntas e elos, obetmos a tabela DH: 
+
+|  j  | θⱼ  |    dⱼ   |   aⱼ   |   ⍺ⱼ   |
+| ----|-----|---------|--------|--------|
+|   1 | q1  |   D1    |   L1   |   0.0° |
+|   2 | q2  |    0    |   L2   | 180.0° |
+|   3 | 0   |   q3    |   0    |  0.0°  |
+|   4 | q4  |   D4    |   0    |  0.0°  |
+
+Onde podemos calcular a pose final do robô atraves da matrizes de transformação $`^0T_4`$. Sendo a matriz $`^0T_4 = ^0T_1 \oplus ^1T_2 \oplus ^2T_3 \oplus ^3T_4 `$, para nosso manipulador acima teriamos as matrizes transformação:
+
+```
+def Pose(q = [0,0,0,0],L1=1,L2=1,D1=0.2,D3=1,D4=0.2):
+    T01 = np.matrix(
+        [[m.cos(q[0]),-m.sin(q[0])*m.cos(0),m.sin(q[0])*m.sin(0),L1*m.cos(q[0])],
+         [m.sin(q[0]),m.cos(q[0])*m.cos(0),-m.cos(q[0])*m.sin(0),L1*m.sin(q[0])],
+         [0,m.sin(0),m.cos(0),D1],
+         [0,0,0,1]])
+    T12 = np.matrix(
+        [[m.cos(q[1]),-m.sin(q[1])*m.cos(PI),m.sin(q[1])*m.sin(PI),L2*m.cos(q[1])],
+         [m.sin(q[1]),m.cos(q[1])*m.cos(PI),-m.cos(q[1])*m.sin(0), L2*m.sin(q[1])],
+         [0,m.sin(PI),m.cos(PI),0],
+         [0,0,0,1]])
+    T23 = np.matrix(
+        [[m.cos(0),-m.sin(0)*m.cos(0),m.sin(0)*m.sin(0),0],
+         [m.sin(0),m.cos(0)*m.cos(0),-m.cos(0)*m.sin(0),0],
+         [0,m.sin(0),m.cos(0),q[2]],
+         [0,0,0,1]])
+    T34 = np.matrix(
+        [[m.cos(q[3]),-m.sin(q[3])*m.cos(0),m.sin(q[3])*m.sin(0),0],
+         [m.sin(q[3]),m.cos(q[3])*m.cos(0),-m.cos(q[3])*m.sin(0),0],
+         [0,m.sin(0),m.cos(0),D4],
+         [0,0,0,1]])
+    
+    T= (np.dot(T01,T12))
+    T = np.dot(T,T23)
+    T04 = np.around(np.dot(T,T34),2)
+    print("0T4")
+    print(T04)
+```
+Onde copararemos nossa matriz $`^0T_4`$ com pose gerada por da biblioteca RoboticsToolBox, atraves da função fkine(), sendo assim modelalos o robô:
+
+```
+e1 = RevoluteDH(a = L1,d = D1)
+e2 = RevoluteDH(a = L2,alpha = PI)
+e3 = PrismaticDH(qlim = [0, D3])
+e4=  RevoluteDH(d = D4)
+rob = DHRobot([e1,e2,e3,e4], name = 'RRPR')
+print(rob)
+```
+**Saida:**
+```
+ θⱼ  │ dⱼ  │ aⱼ │   ⍺ⱼ   │   q⁻    │   q⁺   │
+├─────┼─────┼────┼────────┼─────────┼────────┤
+│ q1  │ 0.2 │  1 │   0.0° │ -180.0° │ 180.0° │
+│ q2  │   0 │  1 │ 180.0° │ -180.0° │ 180.0° │
+│0.0° │  q3 │  0 │   0.0° │     0.0 │    1.0 │
+│ q4  │ 0.2 │  0 │   0.0° │ -180.0° │ 180.0°
+```
+Comparando para os caso abaixos, temos:
+
+```
+print("Pose: Implementação da função")
+Pose(q, L1, L2, D1, D4)
+
+print("Pose: Fkine")
+print(rob.fkine(q))
+
+rob.teach(q)
+```
+### Caso 1: q = [0,0,0,0] e L1 = 1, L2 = 1, D1 = 0.2, D3 = [0,1] e D4 = 0.2
+
+**Saida:**
+
+```
+Pose: Implementação da função
+0T4 =
+[[ 1.   0.   0.   2. ]
+ [ 0.  -1.   0.   0. ]
+ [ 0.   0.  -1.  -0.5]
+ [ 0.   0.   0.   1. ]]
+
+Pose: Fkine
+   1         0         0         2       
+   0        -1         0         0       
+   0         0        -1        -0.5     
+   0         0         0         1
+```
+<p align="center">
+  <a name="figura-13"></a>
+  <img src="Q32.png" alt="q = [0, 0, 0, 0] " width="50%">
+</p>
+
+### Caso 2: q= [0,-PI/4,0.5,PI/2] e L1 = 1, L2 = 1, D1 = 0.2, D3 = [0,1] e D4 = 0.2
+
+**Saida:**
+
+```
+Pose: Implementação da função
+0T4 =
+[[-0.71 -0.71 -0.    1.71]
+ [-0.71  0.71  0.   -0.71]
+ [ 0.    0.   -1.   -0.5 ]
+ [ 0.    0.    0.    1.  ]]
+
+Pose: Fkine
+  -0.7071   -0.7071    0         1.707   
+  -0.7071    0.7071    0        -0.7071  
+   0         0        -1        -0.5     
+   0         0         0         1      
+```
+<p align="center">
+  <a name="figura-13"></a>
+  <img src="Q33.png" alt="q= [0,-PI/4,0.5,PI/2]" width="50%">
+</p>
+
+### Caso 3: q= [-PI/2,PI/2,0.3,PI] e L1 = 1, L2 = 1, D1 = 0.2, D3 = [0,1] e D4 = 0.2
+
+**Saida:**
+
+```
+Pose: Implementação da função
+0T4 =
+[[-1.  -0.   0.   1. ]
+ [-0.   1.  -0.  -1. ]
+ [ 0.  -0.  -1.  -0.3]
+ [ 0.   0.   0.   1. ]]
+
+Pose: Fkine
+  -1         0         0         1       
+   0         1         0        -1       
+   0         0        -1        -0.3     
+   0         0         0         1   
+```
+<p align="center">
+  <a name="figura-13"></a>
+  <img src="Q34.png" alt="q= [-PI/2,PI/2,0.3,PI]" width="50%">
+</p>
+
+### Caso 4: q= q= [0,PI/2,1,-PI] e L1 = 1, L2 = 1, D1 = 0.2, D3 = [0,1] e D4 = 0.2
+
+**Saida:**
+
+```
+Pose: Implementação da função
+0T4 =
+[[-0. -1.  0.  1.]
+ [-1.  0.  0.  1.]
+ [-0. -0. -1. -1.]
+ [ 0.  0.  0.  1.]]
+
+Pose: Fkine
+   0        -1         0         1       
+  -1         0         0         1       
+   0         0        -1        -1       
+   0         0         0         1 
+```
+<p align="center">
+  <a name="figura-13"></a>
+  <img src="Q35.png" alt="q= [0,PI/2,1,-PI] " width="50%">
+</p>
+
+Podemos ver que para os 4 casos apresentados acima o resultado foi semelhante
