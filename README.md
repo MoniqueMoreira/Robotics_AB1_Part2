@@ -1,5 +1,15 @@
 # Robótica AB1_Parte 2: Cinemática Direta
 
+Importando as bibliotecas:
+
+```
+import math as m
+import numpy as np
+from roboticstoolbox import ET2, DHRobot, RevoluteDH, PrismaticDH
+import matplotlib.pyplot as plt
+from spatialmath.base import *
+```
+
 ## 1 Questão
 
 ### Modelagem do Manipulador RR Planar
@@ -78,7 +88,7 @@ Fkine =
   -0.4114    0.9115    0.5     
    0         0         1
 
-t = -0.85, 0.0128; -116°
+t = t = 0.5, 0.5; -24.3°
 ```
 
 <div style="display: flex;">
@@ -88,7 +98,7 @@ t = -0.85, 0.0128; -116°
   <img src="Q1A2.png" alt="q-" style="width: 45%;">
 </div>
 
-Podemos ver que em ambos os casos, quando partimos dos conjuntos de ângulos q+ e q-, o efetuador leva à mesma pose. Isso ocorre porque Fkine não é bijetiva, ou seja, mais de um conjunto de q pode levar ao mesmo ponto, como visto nas imagens [q+](#figura-2) e [q-](#figura-3), que estão no ponto (0.5, 0.5) no plano.
+Podemos ver que em ambos os casos, quando partimos dos conjuntos de ângulos q+ e q-, o efetuador leva à mesma pose. Isso ocorre porque Fkine não é bijetiva, ou seja, mais de um conjunto de q pode levar ao mesmo ponto, como visto nas imagens [q+](#figura-2) e [q-](#figura-3), que possiciona o efetuador no ponto (0.5, 0.5) no plano, mais com rotação diferente.
 
 ### Letra B
 Modificando nosso braço para L1 = 2 e L2 = 1.5 e adicionando uma junta prismática de comprimento de 0 a 2, temos:
