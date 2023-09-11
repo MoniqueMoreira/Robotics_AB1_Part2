@@ -24,7 +24,7 @@ def Q1(L1 = 1, L2 = 1, x= 0.5, y = 0.5):
 
     print(f"Fkine =\n{Rob.fkine(q =[1.9948,-2.4188])}")
     Rob.teach(q =[1.9948,-2.4188])
-    print(Rob.fkine(q =[1.9948,-24188]).printline())
+    print(Rob.fkine(q =[1.9948,-2.4188]).printline())
    
     print("Letra B")
     L1 = 2
